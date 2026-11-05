@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Generator</title>
+    <!-- Load Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font */
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+        /* Style for the generated signature's container to mimic email client behavior */
+        #signature-preview {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            color: #222;
+            line-height: 1.4;
+            max-width: 500px;
+            /* NEW: Disable selection and interaction for the preview area */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none;
+        }
+        /* Ensure inputs are consistently styled */
+        input[type="text"], input[type="url"], input[type="tel"], input[type="password"], select {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500;
+        }
+        /* Readonly input styling */
+        input[readonly] {
+            @apply bg-gray-100 cursor-not-allowed;
+        }
+        label {
+            @apply block text-sm font-medium text-gray-700 mb-1 md:mb-0;
+        }
+        /* Styles for the status message */
+        .status-message {
+            @apply p-3 rounded-lg text-sm font-semibold mb-4 transition-all duration-300 ease-in-out;
+            min-height: 3rem; /* Ensure stability */
+        }
+        .status-success {
+            @apply bg-green-100 text-green-800 border border-green-400;
+        }
+        .status-error {
+            @apply bg-red-100 text-red-800 border border-red-400;
+        }
+        .main-card {
+            min-height: 80vh;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Main Container -->
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-8">
+			<div class="flex justify-center mb-4">
+				<img src="https://erp.fiestaindia.net/assets/images/login-logo.png" alt="Fiesta Logo" class="w-32 md:w-40" />
+			</div>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-2">Fiesta Smart Mobility Private Limited</h1>
+            <h3 class="text-xl font-semibold text-gray-700 tracking-wide">Signature Generator V.1.1 - Updated on 26-02-2026 03:44 PM</h3>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <div id="app-content" class="main-card flex items-center justify-center">
+            <!-- Login or Generator UI will be injected here -->
+        </div>
+
+        <!-- Copyright Footer -->
+        <footer class="text-center mt-8 pt-4 text-sm text-gray-500 border-t border-gray-200">
+			<p>Contact Developer: it@fiestaindia.net</p>
+            <p>Copyright &copy; 2025. Developed and Managed by Sanjaikumar S - Fiesta Smart Mobility Private Limited.</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- CONFIGURATION AND STATE ---
+        const VALID_USERNAME = 'fiesta';
+        const VALID_PASSWORD = 'FSMSmart@2025';
+        let isAuthenticated = false;
+
+        // Hardcoded, always-used values (since inputs are hidden)
+        const DEFAULT_COMPANY = 'Fiesta Smart Mobility Private Limited';
+        // const DEFAULT_PHONE2 = '+91 9916454848'; // CRS number - REMOVED, now a dropdown
+        const DEFAULT_LOGO_URL = 'https://erp.fiestaindia.net/assets/images/login-logo.png'; 
+        const DEFAULT_WEBSITE_URL = 'https://fiestacabs.com';
+
+        // Custom brand color
+        const BRAND_RED = '#D83A2E';
+
+        // Location Data and Default Key
+        const FIESTA_LOCATIONS = {
+            'Chennai HO': '523, Vinayagapuram, S. Kolathur, Chennai 600 129.',
+            'Chennai RO': 'No. 99, L D G Road, Little Mount, Saidapet, Chennai – 600 015.',
+            'Bangalore': 'No. 45/A, 2nd Floor, RJ Elite, Ramamurthy Nagar Main Road, Bengaluru – 560 016.',
+            'Mumbai': '# 109, 1st Floor, ACME Industrial Park, Goregaon East, Mumbai – 400 063.',
+            'Hyderabad': '8-1-43/1/B, 1st Floor Satya Colony, Shaikpet, Golconda, Hyderabad- 500008.',
+            'Mcity': '58, Bharathiyar Street, near Mcity, Mahindra World City, Veerapuram, Tamil Nadu – 603002',
+            'Hosur': 'No.3/36/1, Gandhi Nagar, Thorapalli Agraharam, Hosur-635 109.',
+            'Gurgaon': 'H-103 GF, Sushant Shopping Arcade, Sushant Lok-1, Gurgaon-122009',
+            'Pune': 'Niche Façade ,Office No. 204, 2nd Floor 232 Road, Plot Number: 26 & 27 & Survey Number, Sakore Nagar, Viman Nagar, Pune, Maharashtra 411014',
+            'Oragadam': 'No. 44, Vandalur – Walajabad Road, Oragadam Junction, Oragadam, Kanchipuram – 602 105.',
+			'Kolkata': '34/1Q, Ballygunge Circular Road, Kolkata, West Bengal – 700 019.',
+			'Ahmedabad':'5th Floor, Gala Argos, Netaji Rd, Ellisbridge, Ahmedabad, Gujarat 380006.'
+        };
+        const DEFAULT_LOCATION_KEY = 'Chennai HO'; // Key to be selected initially
+
+        // --- NEW: CRS Number Data ---
+        const CRS_NUMBERS = {
+		    'ETS CHN': '+91 98407 73765',
+			'ETS BLR': '+91 80 4124 8273, +91 99164 54848',
+			'ETS HYD': '+91 91542 32757',
+            'PCR & HO': '+91 99164 54848 📧 booking@fiestaindia.net' // Changed 'For Booking' to 'PCR'
+        };
+        const DEFAULT_CRS_KEY = 'ETS CHN'; // Default key to be selected
+
+
+        // --- ELEMENTS ---
+        const appContent = document.getElementById('app-content');
+        let statusMessageEl; // Will be defined once the generator is rendered
+
+        // --- UTILITY FUNCTIONS ---
+
+        /**
+         * Utility function to display a status or error message to the user.
+         */
+        function showStatus(message, type = 'success') {
+            if (!statusMessageEl) {
+                // For login screen errors, use alertMessage helper
+                alertMessage(message, type);
+                return;
+            }
+            
+            statusMessageEl.textContent = message;
+            statusMessageEl.className = 'status-message'; 
+            
+            if (type === 'success') {
+                statusMessageEl.classList.add('status-success');
+            } else if (type === 'error') {
+                statusMessageEl.classList.add('status-error');
+            }
+            
+            // Clear message after 4 seconds
+            setTimeout(() => {
+                statusMessageEl.textContent = '';
+                statusMessageEl.className = 'status-message';
+            }, 4000);
+        }
+
+        /**
+         * Helper function to show a message directly on the screen for the login form.
+         */
+        function alertMessage(message, type) {
+            const tempStatus = document.createElement('div');
+            tempStatus.classList.add('status-message', 'mt-4');
+            if (type === 'error') {
+                tempStatus.classList.add('status-error');
+            } else {
+                tempStatus.classList.add('status-success');
+            }
+            tempStatus.textContent = message;
+            
+            const existingLoginGate = appContent.querySelector('.login-form-card');
+            if (existingLoginGate) {
+                // Remove existing messages
+                existingLoginGate.querySelectorAll('.status-message').forEach(el => el.remove());
+                existingLoginGate.appendChild(tempStatus);
+                setTimeout(() => tempStatus.remove(), 5000);
+            }
+        }
+
+
+        // --- LOGIN LOGIC ---
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value.trim();
+
+            if (usernameInput === VALID_USERNAME && passwordInput === VALID_PASSWORD) {
+                isAuthenticated = true;
+                renderGenerator();
+            } else {
+                alertMessage('Invalid username or password. Please try again.', 'error');
+            }
+        }
+
+        function renderLoginGate() {
+            // FIX: Ensure the main content area has the centering classes
+            appContent.className = 'main-card flex items-center justify-center';
+            
+            appContent.innerHTML = `
+                <div class="text-center p-8 bg-white rounded-xl shadow-lg max-w-sm w-full login-form-card">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Secure Login</h2>
+                    <p class="text-gray-600 mb-6">
+                        Please use the provided credentials to access the generator.
+                    </p>
+                    <form id="login-form" class="space-y-4 text-left">
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                            <!-- Restored default value for convenience -->
+                            <input type="text" id="username" value="fiesta" class="mt-1" required readonly>
+                        </div>
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <!-- Restored default value for convenience -->
+                            <input type="password" id="password" value="" placeholder="Enter password" class="mt-1" required>
+                        </div>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-md shadow-md hover:bg-indigo-700 transition duration-150">
+                            Log In
+                        </button>
+                    </form>
+                </div>
+            `;
+            // Attach event listener to the new form
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+        }
+
+        // --- SIGNATURE GENERATOR LOGIC ---
+
+        /**
+         * Renders the main signature generator application.
+         */
+        function renderGenerator() {
+            if (!isAuthenticated) {
+                renderLoginGate();
+                return;
+            }
+
+            // Set class for the generator view (full width)
+            appContent.className = 'w-full'; 
+
+            appContent.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
+                    <!-- Input Form -->
+                    <div class="bg-white p-6 rounded-lg shadow-xl">
+                        <h2 class="text-xl font-semibold mb-6 text-gray-800">Enter Your Details</h2>
+                        <form id="signature-form" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4">
+                                <label for="name" class="md:col-span-1">Name*</label>
+                                <!-- Restored default value -->
+                                <input type="text" id="name" value="" placeholder="Enter Your Name" class="md:col-span-2">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4">
+                                <label for="title" class="md:col-span-1">Title*</label>
+                                <!-- Restored default value -->
+                                <input type="text" id="title" value="" placeholder="E.g., Jr.Executive Operations" class="md:col-span-2">
+                            </div>
+                            <!-- HIDDEN: Company Field -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4" style="display:none;">
+                                <label for="company" class="md:col-span-1">Company</label>
+                                <input type="text" id="company" value="${DEFAULT_COMPANY}" class="md:col-span-2" disabled>
+                            </div>
+                            
+                            <!-- LOCATION DROPDOWN (NEW) -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4">
+                                <label for="location" class="md:col-span-1">Location*</label>
+                                <select id="location" class="md:col-span-2" required>
+                                    <option value="" disabled>Select an Office Location</option>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4">
+                                <label for="phone1" class="md:col-span-1">Phone* (📞)</label>
+                                <!-- Restored default value -->
+                                <input type="tel" id="phone1" value="" placeholder="E.g., +91 9876543210" class="md:col-span-2">
+                            </div>
+
+                            <!-- UPDATED: Phone 2 (CRS) Field - Now a dropdown -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4">
+                                <label for="phone2" class="md:col-span-1">Division No*(📲)</label>
+                                <select id="phone2" class="md:col-span-2" required>
+                                    <option value="" disabled>Select Division Number</option>
+                                    <!-- Options will be populated by JS -->
+                                </select>
+                            </div>
+
+                            <!-- HIDDEN: Logo URL field -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4" style="display:none;" >
+                                <label for="logo-url" class="md:col-span-1">Logo Image URL</label>
+                                <!-- UPDATED: Using the provided logo URL -->
+                                <input type="url" id="logo-url" value="${DEFAULT_LOGO_URL}" placeholder="E.g., https://yourdomain.com/logo.png (Optional)" class="md:col-span-2">
+                            </div>
+                            <!-- HIDDEN: Website URL field -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 md:items-center md:gap-4" style="display:none;">
+                                <label for="website-url" class="md:col-span-1">Website URL</label>
+                                <!-- Restored default value -->
+                                <input type="url" id="website-url" value="${DEFAULT_WEBSITE_URL}" placeholder="E.g., https://fiestacabs.com" class="md:col-span-2">
+                            </div>
+							<!-- REMOVED: Helper text for PCR division -->
+                        </form>
+
+                        <!-- UPDATED: Added red styling classes to the Log Out button -->
+                        <button id="logout-btn" class="mt-6 w-full text-sm text-center font-semibold text-red-600 bg-white border border-red-600 py-2 rounded-md hover:bg-red-50 transition duration-150">
+                            Log Out
+                        </button>
+						
+                    </div>
+
+                    <!-- Preview and Output -->
+                    <div class="bg-white p-6 rounded-lg shadow-xl" disabled>
+                        <h2 class="text-xl font-semibold mb-4 text-gray-800">Live Preview & Download</h2>
+
+                        <!-- Status Message Area -->
+                        <div id="status-message" class="status-message" role="alert"></div>
+                        
+                        <!-- Preview -->
+                        <div class="border border-gray-200 p-4 rounded-md bg-gray-50 overflow-auto">
+                            <div id="signature-preview"></div>
+                        </div>
+
+                        <h2 class="text-xl font-semibold mt-8 mb-4 text-gray-800">Download Signature</h2>
+                        <button id="download-html-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 shadow-md">
+                            Download Signature HTML
+                        </button>
+                        
+                        <!-- Hidden textarea to hold the HTML code for copying -->
+                        <textarea id="html-output" class="hidden"></textarea>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 md:p-8 rounded-xl shadow-xl mt-8 w-full">
+                    <h2 class="text-2xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-6">
+                        Email Signature Setup Instructions
+                    </h2>
+                    
+                    <!-- General Steps -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-semibold text-gray-700 mb-4">General Steps</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-gray-600 pl-4">
+                            <li>Fill in your details in the form on the left (fields marked with **\*** are required). The preview will update instantly.</li>
+                            <li>Click **Download Signature HTML**.</li>
+                            <li>Open the downloaded HTML file in any browser (we recommend Google Chrome).</li>
+                            <li>**Copy the entire content** (Ctrl+A / Cmd+A, then Copy) from the browser window.</li>
+                            <li>Then, follow the specific instructions for your email client below (Gmail or Outlook).</li>
+                        </ol>
+                    </div>
+
+                    <!-- Client-Specific Instructions -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-gray-200">
+                        <!-- GMAIL INSTRUCTIONS -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-4">Setup for Gmail (Google Workspace)</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600 pl-4">
+                                <li>Log in to your Google Workspace account (<a href="https://mail.google.com/" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-medium underline">https://mail.google.com/</a>).</li>
+                                <li>Click the **Settings icon (⚙️)** on the top right corner.</li>
+                                <li>Select **See all settings**.</li>
+                                <li>Under the **General** tab, scroll down to **Signature**.</li>
+                                <li>Click **Create New (+)**.</li>
+                                <li>Paste the copied signature into the text box.</li>
+                                <li>Scroll down and click **Save Changes**.</li>
+                            </ol>
+                        </div>
+
+                        <!-- OUTLOOK INSTRUCTIONS -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-700 mb-4">Setup for Outlook</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600 pl-4">
+                                <li>Open Outlook and draft a **New Email**.</li>
+                                <li>From the Message ribbon, go to the **Include** tab and click the **Signature** dropdown.</li>
+                                <li>Select **Signatures...**</li>
+                                <li>Add a **New Signature** and give it a name.</li>
+                                <li>Paste the copied signature and set it as the default signature for new messages.</li>
+                                <li>Click **OK** to save.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize generator elements and logic after rendering
+            initializeGeneratorUI();
+        }
+
+        // --- GENERATOR UI & LOGIC ---
+
+        function initializeGeneratorUI() {
+            // Get elements
+            const form = document.getElementById('signature-form');
+            const preview = document.getElementById('signature-preview');
+            const htmlOutput = document.getElementById('html-output');
+            const downloadBtn = document.getElementById('download-html-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            statusMessageEl = document.getElementById('status-message');
+
+            // Input fields
+            const nameInput = document.getElementById('name');
+            const titleInput = document.getElementById('title');
+            const locationSelect = document.getElementById('location');
+            const phone1Input = document.getElementById('phone1');
+            // UPDATED: Get the new select element for phone2
+            const phone2Select = document.getElementById('phone2');
+
+
+            /**
+             * Populates the location dropdown and sets an initial value.
+             */
+            function populateLocationDropdown() {
+                let defaultAddress = FIESTA_LOCATIONS[DEFAULT_LOCATION_KEY];
+
+                for (const [name, address] of Object.entries(FIESTA_LOCATIONS)) {
+                    const option = document.createElement('option');
+                    option.value = address; // The value is the full address
+                    option.textContent = name; // The visible text is the location name
+
+                    // Set initial selection
+                    if (name === DEFAULT_LOCATION_KEY) {
+                        option.selected = true;
+                    }
+                    
+                    locationSelect.appendChild(option);
+                }
+
+                // If no value is initially selected (shouldn't happen with default key, but for safety)
+                if (!locationSelect.value && defaultAddress) {
+                    locationSelect.value = defaultAddress;
+                }
+            }
+
+            /**
+             * --- NEW: Populates the CRS number dropdown and sets an initial value. ---
+             */
+            function populateCrsDropdown() {
+                let defaultNumber = CRS_NUMBERS[DEFAULT_CRS_KEY];
+
+                for (const [name, number] of Object.entries(CRS_NUMBERS)) {
+                    const option = document.createElement('option');
+                    option.value = number; // The value is the full number
+                    option.textContent = name; // The visible text is the key (PCR/ETS)
+
+                    // Set initial selection
+                    if (name === DEFAULT_CRS_KEY) {
+                        option.selected = true;
+                    }
+                    
+                    phone2Select.appendChild(option);
+                }
+
+                // If no value is initially selected (for safety)
+                if (!phone2Select.value && defaultNumber) {
+                    phone2Select.value = defaultNumber;
+                }
+            }
+
+
+            /**
+             * Checks if all required fields are filled.
+             * @returns {boolean}
+             */
+            function validateInputs() {
+                // Check if all SELECT elements have a value
+                if (!nameInput.value.trim() || !titleInput.value.trim() || 
+                    !locationSelect.value.trim() || !phone1Input.value.trim() ||
+                    !phone2Select.value.trim()) { // ADDED check for phone2Select
+                    showStatus('Please fill in all required fields (marked with *).', 'error');
+                    return false;
+                }
+                return true;
+            }
+
+
+            // Function to update the signature preview
+            function updateSignature() {
+                // Get user-entered values
+                const name = nameInput.value || 'Your Name';
+                const title = titleInput.value || 'Your Title';
+                const location = locationSelect.value || FIESTA_LOCATIONS[DEFAULT_LOCATION_KEY] || 'Your Location';
+                const phone1 = phone1Input.value || '+00 12345 67890';
+                
+                // --- UPDATED: Get values from the new phone2 select element ---
+                const phone2 = phone2Select.value || CRS_NUMBERS[DEFAULT_CRS_KEY];
+                
+                // --- NEW LOGIC as requested ---
+                // Get the raw text (e.g., "ETS CHN", "For Booking")
+                const selectedOptionText = phone2Select.options[phone2Select.selectedIndex]?.text || DEFAULT_CRS_KEY;
+                
+                let phone2Label = selectedOptionText; // Default to the full text
+                if (selectedOptionText.startsWith('ETS')) {
+                    phone2Label = 'ETS';
+                } else if (selectedOptionText === 'PCR & HO') { // UPDATED: Check for 'PCR'
+                    phone2Label = 'For Booking:'; // Keep 'For Booking:' in preview as requested
+                }
+                // --- END NEW LOGIC ---
+
+                // Use hardcoded/default values for hidden fields
+                const company = DEFAULT_COMPANY;
+                // const phone2 = DEFAULT_PHONE2; // REMOVED
+                const logoUrl = DEFAULT_LOGO_URL; 
+                const websiteUrl = DEFAULT_WEBSITE_URL;
+                
+                // Generate a cleaner host name for display
+                const websiteHost = websiteUrl.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
+                
+                // Set fixed image dimensions for Outlook compatibility
+                const LOGO_WIDTH = 150;
+                const LOGO_HEIGHT = 50; 
+
+                // --- SIMPLIFIED SIGNATURE HTML STRUCTURE (All in one TD) ---
+                // --- UPDATED: Replaced "CRS" with dynamic ${phone2Label} ---
+                const signatureHtml = `
+<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; max-width:500px; border-collapse:collapse;">
+  <tr>
+    <td style="padding-bottom:4px; margin:0; color:#000;">
+      <span style="color:#000;">Thanks &amp; Regards,<br></span>
+      <strong style="font-size:14px; color:${BRAND_RED};">${name}</strong><br>
+      <span style="color:#000;"><em>${title}</em></span><br>
+      <strong style="color:${BRAND_RED};">${company}</strong><br>
+      <span style="color:${BRAND_RED};">📍</span>
+      <span style="color:#000;">${location}</span><br>
+      <span style="color:${BRAND_RED};">📞</span>
+      <span style="color:#000;">${phone1}</span><br>
+      <strong style="color:${BRAND_RED};">📲 ${phone2Label} </strong>
+      <span style="color:#000;">${phone2}</span><br>
+      <span style="color:#000; font-family:'Courier New', monospace;">
+        <a href="${websiteUrl}" style="color:${BRAND_RED}; text-decoration:none;">${websiteHost}</a>
+      </span><br>
+      <img src="${logoUrl}" alt="${company} Logo" 
+           width="${LOGO_WIDTH}" 
+           style="display:block; max-width:${LOGO_WIDTH}px; height:auto; border:0; text-decoration:none; padding-top: 4px;" 
+           onerror="this.src='https://placehold.co/${LOGO_WIDTH}x${LOGO_HEIGHT}/eeeeee/333333?text=Logo+Not+Found'; this.width=${LOGO_WIDTH}; this.style.border='1px solid #ccc';">
+    </td>
+  </tr>
+</table>`;
+                // --- END SIMPLIFIED SIGNATURE HTML STRUCTURE ---
+
+                // Update the preview area
+                preview.innerHTML = signatureHtml;
+                
+                // Update the hidden textarea for copying (important for the download)
+                htmlOutput.value = signatureHtml;
+            }
+
+            // Function to download signature as an .html file
+            function downloadHtml() {
+                if (!validateInputs()) {
+                    return; // Stop if validation fails
+                }
+
+                const htmlContent = htmlOutput.value;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `${nameInput.value.replace(/\s/g, '_')}_signature.html`; // Dynamic filename
+                
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                showStatus('Signature HTML downloaded successfully! Open the HTML file to copy the content.', 'success');
+            }
+            
+            // Logout handler
+            logoutBtn.addEventListener('click', () => {
+                isAuthenticated = false;
+                renderLoginGate();
+            });
+
+            // IMPORTANT: Call the new functions before the initial updateSignature
+            populateLocationDropdown();
+            populateCrsDropdown(); // --- NEW ---
+
+
+            // Add event listeners
+            form.addEventListener('input', updateSignature);
+            downloadBtn.addEventListener('click', downloadHtml);
+
+            // Initial call to generate the signature on load (will use default/placeholder values if fields are empty)
+            updateSignature();
+            showStatus('Generator ready!', 'success');
+        }
+
+
+        // --- APPLICATION START ---
+
+        window.onload = function() {
+            // Start by rendering the login screen
+            renderLoginGate();
+        };
+
+    </script>
+
+</body>
+</html>
+
+

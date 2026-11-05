@@ -1,0 +1,6 @@
+{
+  "name": "Fiesta Signature Studio",
+  "description": "Modern, responsive email signature generator and directory for Fiesta Smart Mobility Private Limited with real-time preview, 1-click rich copying, and multi-client installation guides.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
