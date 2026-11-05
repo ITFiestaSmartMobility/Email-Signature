@@ -1,4 +1,4 @@
-import { SignatureData, BRAND_RED } from '../data/fiestaConfig';
+import { SignatureData, BRAND_RED, DEFAULT_CERTIFICATION, DEFAULT_ISO_BANNER_URL } from '../data/fiestaConfig';
 
 /**
  * Builds the inline-styled HTML signature table compatible with all desktop & web email clients.
@@ -13,10 +13,16 @@ export function generateSignatureHtml(data: SignatureData): string {
   const phone2 = data.divisionNumber.trim() || '+91 98407 73765';
   const websiteUrl = data.websiteUrl.trim() || 'https://fiestacabs.com';
   const logoUrl = data.logoUrl.trim() || 'https://erp.fiestaindia.net/assets/images/login-logo.png';
-  const certification = (data.certification !== undefined
+  const rawCert = (data.certification !== undefined
     ? data.certification
-    : 'An ISO 9001:2015 and ISO/IEC 27001:2022 Certified Company'
+    : DEFAULT_CERTIFICATION
   ).trim();
+  const certification = rawCert.replace(/^(🌐|🌍|🌎|🌏)\s*/, '');
+
+  const rawIsoBanner = data.isoBannerUrl !== undefined
+    ? data.isoBannerUrl.trim()
+    : DEFAULT_ISO_BANNER_URL;
+  const resolvedIsoBannerUrl = rawIsoBanner || DEFAULT_ISO_BANNER_URL;
 
   const websiteHost = websiteUrl
     .replace(/^(https?:\/\/)?(www\.)?/, '')
@@ -24,15 +30,16 @@ export function generateSignatureHtml(data: SignatureData): string {
 
   const LOGO_WIDTH = 150;
   const LOGO_HEIGHT = 50;
+  const ISO_BANNER_WIDTH = 400;
 
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; max-width:500px; border-collapse:collapse;">
   <tr>
-    <td style="padding-bottom:4px; margin:0; color:#000;">
+    <td style="padding:0; margin:0; color:#000;">
       <span style="color:#000;">Thanks &amp; Regards,<br></span>
-      <strong style="font-size:14px; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
+      <strong style="font-size:14pt; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
       <span style="color:#000;"><em>${escapeHtml(title)}</em></span><br>
-      <strong style="color:${BRAND_RED};">${escapeHtml(company)}</strong><br>
-      ${certification ? `<span style="color:#000; font-size:11px;">${escapeHtml(certification)}</span><br>` : ''}
+      <strong style="font-size:12pt; color:${BRAND_RED};">${escapeHtml(company)}</strong><br>
+      ${certification ? `<img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:inline-block; vertical-align:-1px; width:13px; height:13px; border:0; margin-right:3px; outline:none; text-decoration:none;" /><strong style="color:#000; font-size:9pt; font-weight:bold;">${escapeHtml(certification)}</strong><br>` : ''}
       <span style="color:${BRAND_RED};">📍</span>
       <span style="color:#000;">${escapeHtml(location)}</span><br>
       <span style="color:${BRAND_RED};">📞</span>
@@ -41,14 +48,36 @@ export function generateSignatureHtml(data: SignatureData): string {
       <span style="color:#000;">${escapeHtml(phone2)}</span><br>
       <span style="color:#000; font-family:'Courier New', monospace;">
         <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none;">${escapeHtml(websiteHost)}</a>
-      </span><br>
+      </span>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:8px; padding-bottom:6px; margin:0;">
       <img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(company)} Logo" 
            width="${LOGO_WIDTH}" 
-           style="display:block; max-width:${LOGO_WIDTH}px; height:auto; border:0; text-decoration:none; padding-top: 4px;" 
+           style="display:block; max-width:${LOGO_WIDTH}px; height:auto; border:0; text-decoration:none;" 
            onerror="this.src='https://placehold.co/${LOGO_WIDTH}x${LOGO_HEIGHT}/eeeeee/333333?text=Logo+Not+Found'; this.width=${LOGO_WIDTH}; this.style.border='1px solid #ccc';">
     </td>
   </tr>
+  ${resolvedIsoBannerUrl ? `<tr>
+    <td style="padding-top:2px; padding-bottom:0; margin:0;">
+      <img src="${escapeHtml(resolvedIsoBannerUrl)}" alt="ISO 9001 &amp; ISO 27001 Certified - SISTEMA, UAF, IAF" 
+           width="${ISO_BANNER_WIDTH}" 
+           style="display:block; max-width:${ISO_BANNER_WIDTH}px; width:${ISO_BANNER_WIDTH}px; height:auto; border:0; text-decoration:none;"
+           onerror="this.src='${DEFAULT_ISO_BANNER_URL}';">
+    </td>
+  </tr>` : ''}
 </table>`;
+}
+
+function toAbsoluteUrl(url: string): string {
+  if (!url) return '';
+  if (/^(https?:|\/\/|data:)/i.test(url)) return url;
+  if (typeof window !== 'undefined' && window.location && window.location.origin) {
+    const origin = window.location.origin.replace(/\/$/, '');
+    return `${origin}${url.startsWith('/') ? '' : '/'}${url}`;
+  }
+  return url;
 }
 
 /**
@@ -230,6 +259,8 @@ function escapeHtml(str: string): string {
 
 function stripHtml(html: string): string {
   const tmp = document.createElement('div');
-  tmp.innerHTML = html;
+  tmp.innerHTML = html
+    .replace(/<img[^>]*alt="([^"]*)"[^>]*>/gi, '$1 ')
+    .replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '🌐 ');
   return tmp.textContent || tmp.innerText || '';
 }

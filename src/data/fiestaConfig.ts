@@ -27,15 +27,26 @@ export interface SignatureData {
   divisionLabel: string;
   websiteUrl: string;
   logoUrl: string;
+  isoBannerUrl?: string;
   includeDisclaimer?: boolean;
 }
 
+// ============================================================================
+// STAFF PORTAL CREDENTIALS (AUTHENTICATION)
+// ============================================================================
+// To change the portal login credentials for Fiesta Smart Mobility staff:
+// 1. Update VALID_USERNAME or VALID_PASSWORD below.
+// 2. Save the file.
+// 3. Run 'npm run build' if deploying the static production bundle.
+// ============================================================================
 export const VALID_USERNAME = 'fiesta';
 export const VALID_PASSWORD = 'FSMSmart@2025';
 
+
 export const DEFAULT_COMPANY = 'Fiesta Smart Mobility Private Limited';
-export const DEFAULT_CERTIFICATION = 'An ISO 9001:2015 and ISO/IEC 27001:2022 Certified Company';
+export const DEFAULT_CERTIFICATION = 'An ISO 9001 and ISO/IEC 27001 Certified Company';
 export const DEFAULT_LOGO_URL = 'https://erp.fiestaindia.net/assets/images/login-logo.png';
+export const DEFAULT_ISO_BANNER_URL = 'https://www.fiestaindia.net/assets/images/iso-signature1.png';
 export const DEFAULT_WEBSITE_URL = 'https://fiestacabs.com';
 export const BRAND_RED = '#D83A2E';
 

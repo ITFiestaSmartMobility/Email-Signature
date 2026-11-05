@@ -206,7 +206,7 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
               {/* Signature rendered in isolated box */}
               <div className="pt-3 border-t border-slate-200 overflow-x-auto">
                 <div
-                  className="signature-rendered-box min-w-[280px]"
+                  className="signature-rendered-box min-w-[320px]"
                   dangerouslySetInnerHTML={{ __html: signatureHtml }}
                 />
               </div>
@@ -269,7 +269,7 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
 
               <div className="pt-2 border-t border-slate-200 overflow-x-auto">
                 <div
-                  className="signature-rendered-box min-w-[280px]"
+                  className="signature-rendered-box min-w-[320px]"
                   dangerouslySetInnerHTML={{ __html: signatureHtml }}
                 />
               </div>
