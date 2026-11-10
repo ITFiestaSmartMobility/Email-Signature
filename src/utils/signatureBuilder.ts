@@ -1,4 +1,4 @@
-import { SignatureData, BRAND_RED, DEFAULT_CERTIFICATION, DEFAULT_ISO_BANNER_URL } from '../data/fiestaConfig';
+import { SignatureData, BRAND_RED, DEFAULT_CERTIFICATION } from '../data/fiestaConfig';
 
 /**
  * Builds the inline-styled HTML signature table compatible with all desktop & web email clients.
@@ -19,18 +19,12 @@ export function generateSignatureHtml(data: SignatureData): string {
   ).trim();
   const certification = rawCert.replace(/^(🌐|🌍|🌎|🌏)\s*/, '');
 
-  const rawIsoBanner = data.isoBannerUrl !== undefined
-    ? data.isoBannerUrl.trim()
-    : DEFAULT_ISO_BANNER_URL;
-  const resolvedIsoBannerUrl = rawIsoBanner || DEFAULT_ISO_BANNER_URL;
-
   const websiteHost = websiteUrl
     .replace(/^(https?:\/\/)?(www\.)?/, '')
     .replace(/\/$/, '');
 
   const LOGO_WIDTH = 150;
   const LOGO_HEIGHT = 50;
-  const ISO_BANNER_WIDTH = 400;
 
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; max-width:500px; border-collapse:collapse;">
   <tr>
@@ -52,21 +46,13 @@ export function generateSignatureHtml(data: SignatureData): string {
     </td>
   </tr>
   <tr>
-    <td style="padding-top:8px; padding-bottom:6px; margin:0;">
+    <td style="padding-top:8px; padding-bottom:0; margin:0;">
       <img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(company)} Logo" 
            width="${LOGO_WIDTH}" 
            style="display:block; max-width:${LOGO_WIDTH}px; height:auto; border:0; text-decoration:none;" 
            onerror="this.src='https://placehold.co/${LOGO_WIDTH}x${LOGO_HEIGHT}/eeeeee/333333?text=Logo+Not+Found'; this.width=${LOGO_WIDTH}; this.style.border='1px solid #ccc';">
     </td>
   </tr>
-  ${resolvedIsoBannerUrl ? `<tr>
-    <td style="padding-top:2px; padding-bottom:0; margin:0;">
-      <img src="${escapeHtml(resolvedIsoBannerUrl)}" alt="ISO 9001 &amp; ISO 27001 Certified - SISTEMA, UAF, IAF" 
-           width="${ISO_BANNER_WIDTH}" 
-           style="display:block; max-width:${ISO_BANNER_WIDTH}px; width:${ISO_BANNER_WIDTH}px; height:auto; border:0; text-decoration:none;"
-           onerror="this.src='${DEFAULT_ISO_BANNER_URL}';">
-    </td>
-  </tr>` : ''}
 </table>`;
 }
 

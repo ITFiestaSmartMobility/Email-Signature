@@ -19,7 +19,6 @@ import {
   DEFAULT_COMPANY,
   DEFAULT_CERTIFICATION,
   DEFAULT_LOGO_URL,
-  DEFAULT_ISO_BANNER_URL,
   DEFAULT_WEBSITE_URL,
   DEFAULT_LOCATION_KEY,
   DEFAULT_CRS_KEY,
@@ -40,7 +39,6 @@ const INITIAL_FORM_DATA: SignatureData = {
   divisionLabel: 'ETS',
   websiteUrl: DEFAULT_WEBSITE_URL,
   logoUrl: DEFAULT_LOGO_URL,
-  isoBannerUrl: DEFAULT_ISO_BANNER_URL,
 };
 
 export default function App() {
@@ -67,9 +65,7 @@ export default function App() {
         ) {
           parsed.certification = DEFAULT_CERTIFICATION;
         }
-        if (!parsed.isoBannerUrl || !parsed.isoBannerUrl.startsWith('http')) {
-          parsed.isoBannerUrl = DEFAULT_ISO_BANNER_URL;
-        }
+        delete parsed.isoBannerUrl;
         return parsed;
       } catch {
         // Fall back
