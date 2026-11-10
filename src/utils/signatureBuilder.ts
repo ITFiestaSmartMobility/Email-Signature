@@ -32,17 +32,39 @@ export function generateSignatureHtml(data: SignatureData): string {
       <span style="color:#000;">Thanks &amp; Regards,<br></span>
       <strong style="font-size:14pt; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
       <span style="color:#000;"><em>${escapeHtml(title)}</em></span><br>
-      <strong style="font-size:12pt; color:${BRAND_RED};">${escapeHtml(company)}</strong><br>
-      ${certification ? `<img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:inline-block; vertical-align:-1px; width:13px; height:13px; border:0; margin-right:3px; outline:none; text-decoration:none;" /><strong style="color:#000; font-size:9pt; font-weight:bold;">${escapeHtml(certification)}</strong><br>` : ''}
-      <span style="color:${BRAND_RED};">📍</span>
-      <span style="color:#000;">${escapeHtml(location)}</span><br>
-      <span style="color:${BRAND_RED};">📞</span>
-      <span style="color:#000;">${escapeHtml(phone1)}</span><br>
-      <strong style="color:${BRAND_RED};">📲 ${escapeHtml(phone2Label)} </strong>
-      <span style="color:#000;">${escapeHtml(phone2)}</span><br>
-      <span style="color:#000; font-family:'Courier New', monospace;">
-        <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none;">${escapeHtml(websiteHost)}</a>
-      </span>
+      <strong style="font-size:12pt; color:${BRAND_RED};">${escapeHtml(company)}</strong>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top:5px; padding-bottom:0; margin:0;">
+      <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; border-collapse:collapse;">
+        ${certification ? `<tr>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 3px 0; text-align:center; vertical-align:middle; line-height:1;">
+            <img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:block; margin:0 auto; width:13px; height:13px; border:0; outline:none; text-decoration:none;" />
+          </td>
+          <td valign="middle" style="padding:1px 0 3px 0; vertical-align:middle; line-height:1.3;">
+            <strong style="color:#000; font-size:9pt; font-weight:bold; font-family:'Segoe UI', Arial, sans-serif;">${escapeHtml(certification)}</strong>
+          </td>
+        </tr>` : ''}
+        <tr>
+          <td width="18" align="center" valign="top" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:top; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📍</td>
+          <td valign="top" style="padding:1px 0; vertical-align:top; color:#000; font-size:12px; line-height:1.4;">${escapeHtml(location)}</td>
+        </tr>
+        <tr>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📞</td>
+          <td valign="middle" style="padding:1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.4;">${escapeHtml(phone1)}</td>
+        </tr>
+        <tr>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📲</td>
+          <td valign="middle" style="padding:1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.4;"><strong style="color:${BRAND_RED};">${escapeHtml(phone2Label)} </strong>${escapeHtml(phone2)}</td>
+        </tr>
+        <tr>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle;">&nbsp;</td>
+          <td valign="middle" style="padding:1px 0; vertical-align:middle; font-size:12px; line-height:1.4;">
+            <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none; font-family:'Segoe UI', Arial, sans-serif;">${escapeHtml(websiteHost)}</a>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
   <tr>
@@ -247,6 +269,12 @@ function stripHtml(html: string): string {
   const tmp = document.createElement('div');
   tmp.innerHTML = html
     .replace(/<img[^>]*alt="([^"]*)"[^>]*>/gi, '$1 ')
-    .replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '🌐 ');
-  return tmp.textContent || tmp.innerText || '';
+    .replace(/<svg[^>]*>[\s\S]*?<\/svg>/gi, '🌐 ')
+    .replace(/<\/tr>/gi, '\n')
+    .replace(/<\/td>/gi, ' ')
+    .replace(/<br\s*\/?>/gi, '\n');
+  return (tmp.textContent || tmp.innerText || '')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n\s*\n/g, '\n')
+    .trim();
 }

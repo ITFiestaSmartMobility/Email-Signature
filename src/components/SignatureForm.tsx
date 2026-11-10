@@ -19,6 +19,7 @@ import {
   DEFAULT_COMPANY,
   DEFAULT_CERTIFICATION,
   DEFAULT_LOGO_URL,
+  DEFAULT_ISO_BANNER_URL,
   DEFAULT_WEBSITE_URL,
 } from '../data/fiestaConfig';
 
@@ -339,8 +340,22 @@ export const SignatureForm: React.FC<SignatureFormProps> = ({
                 </div>
               </div>
 
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1 flex items-center gap-1">
+                  <ImageIcon className="w-3 h-3 text-blue-600" />
+                  <span>ISO Accreditation Banner (Below Logo)</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.isoBannerUrl ?? DEFAULT_ISO_BANNER_URL}
+                  onChange={(e) => handleFieldChange('isoBannerUrl', e.target.value)}
+                  placeholder={DEFAULT_ISO_BANNER_URL}
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-md text-slate-900 focus:outline-none focus:ring-1 focus:ring-red-500 font-mono"
+                />
+              </div>
+
               <div className="flex items-center justify-between pt-1 text-[11px] text-slate-600">
-                <span>Optimized dimensions: 150px logo width</span>
+                <span>Optimized dimensions: 150px logo &amp; 400px ISO banner</span>
                 <button
                   type="button"
                   onClick={() => {
@@ -350,6 +365,7 @@ export const SignatureForm: React.FC<SignatureFormProps> = ({
                       certification: DEFAULT_CERTIFICATION,
                       websiteUrl: DEFAULT_WEBSITE_URL,
                       logoUrl: DEFAULT_LOGO_URL,
+                      isoBannerUrl: DEFAULT_ISO_BANNER_URL,
                     });
                   }}
                   className="text-red-600 hover:underline font-semibold"
