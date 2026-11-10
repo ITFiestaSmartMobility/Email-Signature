@@ -158,8 +158,20 @@ export default function App() {
         {activeTab === 'generator' && (
           <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white shadow-sm shrink-0">
-                <Sparkles className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 p-1.5 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                <img
+                  src="https://erp.fiestaindia.net/assets/images/favicon.ico"
+                  alt="Fiesta Icon"
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                    if (target.parentElement) {
+                      target.parentElement.className =
+                        'w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center text-white shadow-sm shrink-0';
+                    }
+                  }}
+                />
               </div>
               <div>
                 <div className="flex items-center gap-2">

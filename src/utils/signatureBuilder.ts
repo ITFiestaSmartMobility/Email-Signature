@@ -26,49 +26,49 @@ export function generateSignatureHtml(data: SignatureData): string {
   const LOGO_WIDTH = 150;
   const LOGO_HEIGHT = 50;
 
-  return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; max-width:500px; border-collapse:collapse;">
+  return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.2; max-width:500px; border-collapse:collapse; mso-line-height-rule:exactly;">
   <tr>
-    <td style="padding:0; margin:0; color:#000;">
-      <span style="color:#000;">Thanks &amp; Regards,<br></span>
-      <strong style="font-size:14pt; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
-      <span style="color:#000;"><em>${escapeHtml(title)}</em></span><br>
-      <strong style="font-size:12pt; color:${BRAND_RED};">${escapeHtml(company)}</strong>
+    <td style="padding:0; margin:0; color:#000; line-height:1.2;">
+      <span style="color:#000; line-height:1.2;">Thanks &amp; Regards,<br></span>
+      <strong style="font-size:14pt; line-height:1.2; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
+      <span style="color:#000; line-height:1.2;"><em>${escapeHtml(title)}</em></span><br>
+      <strong style="font-size:12pt; line-height:1.2; color:${BRAND_RED};">${escapeHtml(company)}</strong>
     </td>
   </tr>
   <tr>
-    <td style="padding-top:5px; padding-bottom:0; margin:0;">
-      <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.4; border-collapse:collapse;">
+    <td style="padding-top:3px; padding-bottom:0; margin:0;">
+      <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.2; border-collapse:collapse; mso-line-height-rule:exactly;">
         ${certification ? `<tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 3px 0; text-align:center; vertical-align:middle; line-height:1;">
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 2px 0; text-align:center; vertical-align:middle; line-height:1;">
             <img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:block; margin:0 auto; width:13px; height:13px; border:0; outline:none; text-decoration:none;" />
           </td>
-          <td valign="middle" style="padding:1px 0 3px 0; vertical-align:middle; line-height:1.3;">
-            <strong style="color:#000; font-size:9pt; font-weight:bold; font-family:'Segoe UI', Arial, sans-serif;">${escapeHtml(certification)}</strong>
+          <td valign="middle" style="padding:0 0 2px 0; vertical-align:middle; line-height:1.2;">
+            <strong style="color:#000; font-size:9pt; font-weight:bold; font-family:'Segoe UI', Arial, sans-serif; line-height:1.2;">${escapeHtml(certification)}</strong>
           </td>
         </tr>` : ''}
         <tr>
-          <td width="18" align="center" valign="top" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:top; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📍</td>
-          <td valign="top" style="padding:1px 0; vertical-align:top; color:#000; font-size:12px; line-height:1.4;">${escapeHtml(location)}</td>
+          <td width="18" align="center" valign="top" style="width:18px; min-width:18px; padding:0 4px 1px 0; text-align:center; vertical-align:top; color:${BRAND_RED}; font-size:12px; line-height:1.2;">📍</td>
+          <td valign="top" style="padding:0 0 1px 0; vertical-align:top; color:#000; font-size:12px; line-height:1.2;">${escapeHtml(location)}</td>
         </tr>
         <tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📞</td>
-          <td valign="middle" style="padding:1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.4;">${escapeHtml(phone1)}</td>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:12px; line-height:1.2;">📞</td>
+          <td valign="middle" style="padding:0 0 1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.2;">${escapeHtml(phone1)}</td>
         </tr>
         <tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:13px; line-height:1.4;">📲</td>
-          <td valign="middle" style="padding:1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.4;"><strong style="color:${BRAND_RED};">${escapeHtml(phone2Label)} </strong>${escapeHtml(phone2)}</td>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 1px 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:12px; line-height:1.2;">📲</td>
+          <td valign="middle" style="padding:0 0 1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.2;"><strong style="color:${BRAND_RED};">${escapeHtml(phone2Label)} </strong>${escapeHtml(phone2)}</td>
         </tr>
         <tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:1px 5px 1px 0; text-align:center; vertical-align:middle;">&nbsp;</td>
-          <td valign="middle" style="padding:1px 0; vertical-align:middle; font-size:12px; line-height:1.4;">
-            <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none; font-family:'Segoe UI', Arial, sans-serif;">${escapeHtml(websiteHost)}</a>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 0 0; text-align:center; vertical-align:middle;">&nbsp;</td>
+          <td valign="middle" style="padding:0; vertical-align:middle; font-size:12px; line-height:1.2;">
+            <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none; font-family:'Segoe UI', Arial, sans-serif; line-height:1.2;">${escapeHtml(websiteHost)}</a>
           </td>
         </tr>
       </table>
     </td>
   </tr>
   <tr>
-    <td style="padding-top:8px; padding-bottom:0; margin:0;">
+    <td style="padding-top:5px; padding-bottom:0; margin:0;">
       <img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(company)} Logo" 
            width="${LOGO_WIDTH}" 
            style="display:block; max-width:${LOGO_WIDTH}px; height:auto; border:0; text-decoration:none;" 

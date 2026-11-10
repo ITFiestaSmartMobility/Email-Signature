@@ -49,8 +49,21 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => setActiveTab('generator')}
               className="flex items-center gap-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 rounded-lg"
             >
-              <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
-                F
+              <div className="w-8 h-8 rounded-lg bg-white border border-slate-200/90 p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                <img
+                  src="https://erp.fiestaindia.net/assets/images/favicon.ico"
+                  alt="Fiesta Icon"
+                  className="w-full h-full object-contain"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.style.display = 'none';
+                    if (target.parentElement) {
+                      target.parentElement.className =
+                        'w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-bold text-base shadow-sm shrink-0';
+                      target.parentElement.innerText = 'F';
+                    }
+                  }}
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-base font-bold tracking-tight text-slate-900 whitespace-nowrap">

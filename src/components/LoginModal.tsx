@@ -42,9 +42,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onLoginSuccess }
               className="max-h-full max-w-full object-contain"
               onError={(e) => {
                 const target = e.currentTarget;
-                target.style.display = 'none';
-                if (target.parentElement) {
-                  target.parentElement.innerHTML = '<span class="text-red-600 font-extrabold text-xl">F</span>';
+                if (!target.dataset.fallback) {
+                  target.dataset.fallback = 'true';
+                  target.src = 'https://erp.fiestaindia.net/assets/images/favicon.ico';
+                } else {
+                  target.style.display = 'none';
+                  if (target.parentElement) {
+                    target.parentElement.innerHTML = '<span class="text-red-600 font-extrabold text-xl">F</span>';
+                  }
                 }
               }}
             />
