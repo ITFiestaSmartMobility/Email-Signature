@@ -30,7 +30,7 @@ export function generateSignatureHtml(data: SignatureData): string {
   <tr>
     <td style="padding:0; margin:0; color:#000; line-height:1.2;">
       <span style="color:#000; line-height:1.2;">Thanks &amp; Regards,<br></span>
-      <strong style="font-size:14pt; line-height:1.2; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
+      <strong style="font-size:12pt; line-height:1.2; color:${BRAND_RED};">${escapeHtml(name)}</strong><br>
       <span style="color:#000; line-height:1.2;"><em>${escapeHtml(title)}</em></span><br>
       <strong style="font-size:12pt; line-height:1.2; color:${BRAND_RED};">${escapeHtml(company)}</strong>
     </td>
@@ -59,7 +59,9 @@ export function generateSignatureHtml(data: SignatureData): string {
           <td valign="middle" style="padding:0 0 1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.2;"><strong style="color:${BRAND_RED};">${escapeHtml(phone2Label)} </strong>${escapeHtml(phone2)}</td>
         </tr>
         <tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 0 0; text-align:center; vertical-align:middle;">&nbsp;</td>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 0 0; text-align:center; vertical-align:middle; line-height:1;">
+            <img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:block; margin:0 auto; width:13px; height:13px; border:0; outline:none; text-decoration:none;" />
+          </td>
           <td valign="middle" style="padding:0; vertical-align:middle; font-size:12px; line-height:1.2;">
             <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none; font-family:'Segoe UI', Arial, sans-serif; line-height:1.2;">${escapeHtml(websiteHost)}</a>
           </td>
