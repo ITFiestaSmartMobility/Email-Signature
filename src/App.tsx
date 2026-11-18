@@ -135,7 +135,7 @@ export default function App() {
     if (ok) {
       notify('Signature copied! Paste directly into Gmail or Outlook.', 'success');
     } else {
-      notify('Rich copy restricted. Please use Download button in Studio.', 'info');
+      notify('Rich copy restricted. Please copy from the Raw or Code tab in Studio.', 'info');
     }
   };
 
@@ -179,7 +179,7 @@ export default function App() {
                     Fiesta Signature Studio
                   </h1>
                   <span className="text-[11px] font-semibold text-red-700 bg-red-50 border border-red-200/60 px-2 py-0.5 rounded-full">
-                    v2.0
+                    v3.0
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-0.5">

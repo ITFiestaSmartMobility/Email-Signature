@@ -59,9 +59,9 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ onCopySignature }) => {
             <span className="inline-block w-5 h-5 rounded-full bg-red-600 text-white text-[11px] font-bold text-center leading-5 mb-2">
               2
             </span>
-            <h3 className="text-xs font-bold text-slate-900">Copy or Download</h3>
+            <h3 className="text-xs font-bold text-slate-900">Copy Signature</h3>
             <p className="text-[11px] text-slate-500 mt-0.5">
-              Click &ldquo;Copy Formatted Signature&rdquo; or download the self-contained HTML file.
+              Click &ldquo;Copy Formatted Signature&rdquo; to copy the visual template to your clipboard.
             </p>
           </div>
 
@@ -408,10 +408,10 @@ export const GuidesView: React.FC<GuidesViewProps> = ({ onCopySignature }) => {
               <div className="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-1">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>Can I download the HTML file and open it in Google Chrome?</span>
+                  <span>Can I inspect or copy the raw HTML code directly?</span>
                 </div>
                 <p className="text-slate-600 pl-6 leading-relaxed">
-                  Yes! Click <strong>&ldquo;Download Signature HTML&rdquo;</strong> in the Studio. You can open that file in any browser (Chrome, Edge, Safari), press <kbd className="font-mono bg-white border border-slate-300 px-1 py-0.5 rounded">Ctrl+A</kbd> then <kbd className="font-mono bg-white border border-slate-300 px-1 py-0.5 rounded">Ctrl+C</kbd>, and paste it anywhere.
+                  Yes! Switch to the <strong>&ldquo;Code&rdquo;</strong> tab in the Live Simulation panel and click <strong>&ldquo;Copy HTML&rdquo;</strong>, or use the <strong>&ldquo;Raw&rdquo;</strong> tab to highlight and copy the rendered signature directly.
                 </p>
               </div>
 

@@ -26,15 +26,21 @@ const sampleData: SignatureData = {
   logoUrl: DEFAULT_LOGO_URL,
 };
 
-test('generateSignatureHtml renders the red globe icon before both certification and website link', () => {
+test('generateSignatureHtml has no globe before ISO line and keeps default globe symbol before website link', () => {
   const html = generateSignatureHtml(sampleData);
-  const globeImg = '<img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png"';
-  const occurrences = html.split(globeImg).length - 1;
-  assert.equal(occurrences, 2, 'Expected two red globe icons: one for ISO line and one for website link');
+  assert.equal(
+    html.includes('img.icons8.com'),
+    false,
+    'Should not use external icons8 globe image'
+  );
+
+  const isoRowRegex =
+    /<tr>\s*<td colspan="2"[^>]*>\s*<strong[^>]*>An ISO 9001 and ISO\/IEC 27001 Certified Company<\/strong>\s*<\/td>\s*<\/tr>/;
+  assert.match(html, isoRowRegex, 'ISO certification row should span cleanly with no globe icon');
 
   const websiteRowRegex =
-    /<tr>\s*<td[^>]*>\s*<img src="https:\/\/img\.icons8\.com\/ios-glyphs\/48\/D83A2E\/globe--v1\.png"[^>]*>\s*<\/td>\s*<td[^>]*>\s*<a href="https:\/\/fiestacabs\.com"[^>]*>fiestacabs\.com<\/a>\s*<\/td>\s*<\/tr>/;
-  assert.match(html, websiteRowRegex, 'Website link row should have the globe icon in its left cell');
+    /<tr>\s*<td[^>]*>🌐<\/td>\s*<td[^>]*>\s*<a href="https:\/\/fiestacabs\.com"[^>]*>fiestacabs\.com<\/a>\s*<\/td>\s*<\/tr>/;
+  assert.match(html, websiteRowRegex, 'Website link row should use the default 🌐 symbol');
 });
 
 test('generateSignatureHtml keeps compact line-height, 12pt name size, and MSO rules', () => {

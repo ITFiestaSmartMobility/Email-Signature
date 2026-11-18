@@ -298,8 +298,7 @@ export const SignatureForm: React.FC<SignatureFormProps> = ({
 
               <div>
                 <label className="block text-[11px] font-semibold text-slate-600 mb-1 flex items-center gap-1">
-                  <Globe className="w-3 h-3 text-red-500" />
-                  <span>ISO Certification Text (Prefixed with 🌐)</span>
+                  <span>ISO Certification Text</span>
                 </label>
                 <input
                   type="text"

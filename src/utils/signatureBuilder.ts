@@ -39,10 +39,7 @@ export function generateSignatureHtml(data: SignatureData): string {
     <td style="padding-top:3px; padding-bottom:0; margin:0;">
       <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Segoe UI', Arial, sans-serif; font-size:12px; color:#000; line-height:1.2; border-collapse:collapse; mso-line-height-rule:exactly;">
         ${certification ? `<tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 2px 0; text-align:center; vertical-align:middle; line-height:1;">
-            <img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:block; margin:0 auto; width:13px; height:13px; border:0; outline:none; text-decoration:none;" />
-          </td>
-          <td valign="middle" style="padding:0 0 2px 0; vertical-align:middle; line-height:1.2;">
+          <td colspan="2" valign="middle" style="padding:0 0 2px 0; vertical-align:middle; line-height:1.2;">
             <strong style="color:#000; font-size:9pt; font-weight:bold; font-family:'Segoe UI', Arial, sans-serif; line-height:1.2;">${escapeHtml(certification)}</strong>
           </td>
         </tr>` : ''}
@@ -59,9 +56,7 @@ export function generateSignatureHtml(data: SignatureData): string {
           <td valign="middle" style="padding:0 0 1px 0; vertical-align:middle; color:#000; font-size:12px; line-height:1.2;"><strong style="color:${BRAND_RED};">${escapeHtml(phone2Label)} </strong>${escapeHtml(phone2)}</td>
         </tr>
         <tr>
-          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 0 0; text-align:center; vertical-align:middle; line-height:1;">
-            <img src="https://img.icons8.com/ios-glyphs/48/D83A2E/globe--v1.png" alt="🌐" width="13" height="13" style="display:block; margin:0 auto; width:13px; height:13px; border:0; outline:none; text-decoration:none;" />
-          </td>
+          <td width="18" align="center" valign="middle" style="width:18px; min-width:18px; padding:0 4px 0 0; text-align:center; vertical-align:middle; color:${BRAND_RED}; font-size:12px; line-height:1.2;">🌐</td>
           <td valign="middle" style="padding:0; vertical-align:middle; font-size:12px; line-height:1.2;">
             <a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noopener noreferrer" style="color:${BRAND_RED}; text-decoration:none; font-family:'Segoe UI', Arial, sans-serif; line-height:1.2;">${escapeHtml(websiteHost)}</a>
           </td>
@@ -88,98 +83,6 @@ function toAbsoluteUrl(url: string): string {
     return `${origin}${url.startsWith('/') ? '' : '/'}${url}`;
   }
   return url;
-}
-
-/**
- * Creates a complete standalone HTML document for downloading.
- */
-export function generateStandaloneHtmlDocument(data: SignatureData): string {
-  const signatureHtml = generateSignatureHtml(data);
-  const employeeName = data.name.trim() || 'Employee';
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(employeeName)} - Fiesta Smart Mobility Email Signature</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #f8fafc;
-      color: #1e293b;
-      margin: 0;
-      padding: 32px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .wrapper {
-      max-width: 640px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-      padding: 24px 32px;
-    }
-    .header {
-      border-bottom: 1px solid #e2e8f0;
-      padding-bottom: 16px;
-      margin-bottom: 24px;
-    }
-    .header h1 {
-      font-size: 18px;
-      margin: 0 0 6px 0;
-      color: #0f172a;
-    }
-    .instructions {
-      background: #eff6ff;
-      border-left: 4px solid #3b82f6;
-      padding: 12px 16px;
-      margin-bottom: 24px;
-      border-radius: 4px;
-      font-size: 13px;
-      line-height: 1.5;
-      color: #1e40af;
-    }
-    .preview-box {
-      background: #ffffff;
-      border: 1px dashed #cbd5e1;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-    .footer-note {
-      font-size: 11px;
-      color: #94a3b8;
-      text-align: center;
-      margin-top: 24px;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrapper">
-    <div class="header">
-      <h1>Fiesta Smart Mobility — Email Signature</h1>
-      <p style="margin: 0; font-size: 13px; color: #64748b;">Ready to install into Gmail, Microsoft Outlook, or Apple Mail</p>
-    </div>
-    
-    <div class="instructions">
-      <strong>How to use this file:</strong><br>
-      1. Highlight the signature box below (or press <kbd>Ctrl+A</kbd> / <kbd>Cmd+A</kbd>).<br>
-      2. Press <kbd>Ctrl+C</kbd> / <kbd>Cmd+C</kbd> to copy.<br>
-      3. Open your email client's signature settings (Gmail or Outlook) and press <kbd>Ctrl+V</kbd> / <kbd>Cmd+V</kbd> to paste.
-    </div>
-
-    <div class="preview-box" id="signature-target">
-      ${signatureHtml}
-    </div>
-
-    <p class="footer-note">Generated via Fiesta Signature Studio · Fiesta Smart Mobility Private Limited</p>
-  </div>
-</body>
-</html>`;
 }
 
 /**
@@ -235,27 +138,6 @@ export async function copyRichSignatureToClipboard(htmlString: string): Promise<
   }
 
   return false;
-}
-
-/**
- * Downloads the signature file as an HTML file.
- */
-export function downloadSignatureHtmlFile(data: SignatureData): void {
-  const fullHtml = generateStandaloneHtmlDocument(data);
-  const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
-  const sanitizedName = (data.name.trim() || 'Fiesta_Employee')
-    .replace(/[^a-zA-Z0-9_-]/g, '_')
-    .toLowerCase();
-
-  const fileName = `${sanitizedName}_signature.html`;
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
 }
 
 function escapeHtml(str: string): string {

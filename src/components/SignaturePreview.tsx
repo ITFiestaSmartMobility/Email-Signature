@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Copy,
-  Download,
   Code,
   Smartphone,
   Monitor,
@@ -18,7 +17,6 @@ import { SignatureData } from '../data/fiestaConfig';
 import {
   generateSignatureHtml,
   copyRichSignatureToClipboard,
-  downloadSignatureHtmlFile,
 } from '../utils/signatureBuilder';
 
 interface SignaturePreviewProps {
@@ -49,22 +47,13 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
       if (ok) {
         onNotify('Signature copied to clipboard! Paste directly into Gmail or Outlook.', 'success');
       } else {
-        onNotify('Rich copy restricted by browser. You can download the HTML file instead.', 'info');
+        onNotify('Rich copy restricted by browser. Switch to the Raw or Code tab to copy manually.', 'info');
       }
     } catch {
-      onNotify('Failed to copy. Please try the Download HTML button.', 'error');
+      onNotify('Failed to copy. Please try the Raw or Code tab to copy manually.', 'error');
     } finally {
       setTimeout(() => setCopying(false), 1200);
     }
-  };
-
-  const handleDownload = () => {
-    if (!formData.name.trim() || !formData.title.trim() || !formData.phone1.trim()) {
-      onNotify('Please fill in all required fields (Name, Title, Phone).', 'error');
-      return;
-    }
-    downloadSignatureHtmlFile(formData);
-    onNotify(`Downloaded ${formData.name.trim() || 'Fiesta'}_signature.html`, 'success');
   };
 
   const handleCopyCode = async () => {
@@ -367,13 +356,13 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
 
       {/* Action Footer Bar */}
       <div className="p-4 bg-white border-t border-slate-200 space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div>
           {/* Primary Action: 1-Click Rich Copy */}
           <button
             type="button"
             onClick={handleCopyRich}
             disabled={copying}
-            className="flex items-center justify-center gap-2 py-2.5 px-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold rounded-lg shadow-sm hover:shadow transition-all text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-semibold rounded-lg shadow-sm hover:shadow transition-all text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           >
             {copying ? (
               <>
@@ -386,16 +375,6 @@ export const SignaturePreview: React.FC<SignaturePreviewProps> = ({
                 <span>Copy Formatted Signature</span>
               </>
             )}
-          </button>
-
-          {/* Secondary Action: Download HTML */}
-          <button
-            type="button"
-            onClick={handleDownload}
-            className="flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-900 hover:bg-slate-800 active:bg-black text-white font-semibold rounded-lg shadow-sm hover:shadow transition-all text-xs sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-700"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download Signature HTML</span>
           </button>
         </div>
 

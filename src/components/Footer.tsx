@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
               Fiesta Smart Mobility Private Limited
             </span>
             <span className="hidden sm:inline text-slate-300">·</span>
-            <span>Version 2.0 (Responsive Edition)</span>
+            <span>Version 3.0 (Responsive Edition)</span>
           </div>
 
           <div className="flex items-center gap-4 text-xs">
